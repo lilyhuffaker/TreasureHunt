@@ -5,13 +5,12 @@ import javax.swing.JPanel;
 
 public class TreasureHunt {
 	JFrame frame;
-	final int _width = 800;
-	final int _height = 800;
+	static final int _width = 800;
+	static final int _height = 800;
 	GamePanel gamePanel;
 	
 	public static void main(String[] args) {
 		new TreasureHunt().setup();
-		
 	}
 	
 	 TreasureHunt() {
@@ -35,4 +34,4 @@ public class TreasureHunt {
 		
 	}
 }
-//YOU ARE ON PART 5 STEP TEN!
+
