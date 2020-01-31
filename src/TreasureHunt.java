@@ -1,5 +1,7 @@
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
