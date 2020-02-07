@@ -8,11 +8,12 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
-//You left off on part nine step 7
+
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Timer tim;
 	Font titleFont;
 	Player player;
+	ObjectManager object;
 	final int MENU_STATE = 0;
 	final int GAME_STATE = 1;
 	final int END_STATE = 2;
@@ -21,6 +22,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		tim = new Timer(1000/60, this);
 		titleFont = new Font("Comic Sans MS",Font.PLAIN,48);
 		player = new Player(200, 200, 50, 50);
+		object = new ObjectManager(player);
 	}
 	
 	void updateMenuState(){
@@ -28,7 +30,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 	
 	void updateGameState() {
-		player.update();
+		object.update();
 	}
 	
 	void updateEndState() {
@@ -47,7 +49,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void drawGameState(Graphics g) {
 		g.setColor(Color.WHITE);
 		g.fillRect(0,0, TreasureHunt._width, TreasureHunt._height);
-		player.draw(g);
+		object.draw(g);
 	}
 	
 	void drawEndState(Graphics g) {
@@ -95,7 +97,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println("key has been smooshed");
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			currentState ++;
 			if(currentState > END_STATE) {
@@ -131,12 +132,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println("key has been relased from federal prison");
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println("type");
 	}
 }

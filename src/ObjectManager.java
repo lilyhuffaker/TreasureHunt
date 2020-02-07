@@ -4,7 +4,7 @@ public class ObjectManager {
 	Player player;
 	
 	ObjectManager(Player player){
-		
+		this.player = player;
 	}
 	
 	void update() {
