@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -13,6 +14,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Timer tim;
 	Font titleFont;
 	Player player;
+	FinishLine finish;
 	ObjectManager object;
 	final int MENU_STATE = 0;
 	final int GAME_STATE = 1;
@@ -21,7 +23,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	GamePanel() {
 		tim = new Timer(1000/60, this);
 		titleFont = new Font("Comic Sans MS",Font.PLAIN,48);
-		player = new Player(200, 200, 35, 35);
+		player = new Player(710, 740, 35, 35);
+		finish = new FinishLine(100, 100, 50, 50);
 		object = new ObjectManager(player);
 	}
 	
@@ -96,6 +99,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		int x = player.x;
+		int y = player.y;
 		// TODO Auto-generated method stub
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			currentState ++;
@@ -104,29 +109,44 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_A) {
-			player.x -= player.speed;
-			if (player.x > TreasureHunt._width) {
-				player.x = 0;
+			x -= player.speed;
+			if (x > TreasureHunt._width) {
+				x = 0;
 			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_D) {
-			player.x += player.speed;
-			if (player.x < 0) {
-				player.x = TreasureHunt._width;
+			x += player.speed;
+			if (x < 0) {
+				x = TreasureHunt._width;
 			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_S) {
-			player.y += player.speed;
-			if (player.y < 0) {
-				player.y = TreasureHunt._height;
+			y += player.speed;
+			if (y < 0) {
+				y = TreasureHunt._height;
 			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_W) {
-			player.y -= player.speed;
-			if (player.y > TreasureHunt._height) {
-				player.y = 0;
+			y -= player.speed;
+			if (y > TreasureHunt._height) {
+				y = 0;
 			}
-		}	
+		}
+		if(object.walls.intersects(new Rectangle(x,y,player.width,player.height)) == false) {
+			player.x = x;
+			player.y = y;
+		}
+		else {
+			System.out.println("nah");
+		}
+		
+		if(new Rectangle(x,y,player.width,player.height).intersects(new Rectangle(x,y,finish.width, finish.height)) == false) {
+			System.out.println("free");
+		}
+		else {
+			System.out.println("harm");
+		}
+		
 	}
 
 	@Override

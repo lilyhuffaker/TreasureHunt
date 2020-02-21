@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -32,6 +33,22 @@ public class Walls extends GameObject{
 	
 	void update() {
 		
+	}
+	
+	boolean intersects(Rectangle r) {
+		int cellWidth = this.width/cellsX;
+		int cellHeight = this.height/cellsY;
+		for (int col = 0;col<cellsX;col++) {
+	    	for(int row = 0;row<cellsY;row++) {
+	    		if (array[col][row] == 'X') {
+	    			Rectangle cell = new Rectangle(col*cellWidth, row*cellHeight, cellWidth, cellHeight );
+	    			if (cell.intersects(r)) {
+	    				return true;
+	    			}
+	    		}
+	    	}
+	    }
+		return false;
 	}
 	
 	void loadWalls(String fileName) {
