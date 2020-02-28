@@ -13,6 +13,7 @@ import javax.swing.Timer;
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Timer tim;
 	Font titleFont;
+	Font otherFont;
 	Player player;
 	FinishLine finish;
 	ObjectManager object;
@@ -20,12 +21,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	final int GAME_STATE = 1;
 	final int END_STATE = 2;
 	int currentState = MENU_STATE;
+	long start;
+	long end;
+	long finishTime;
 	GamePanel() {
 		tim = new Timer(1000/60, this);
-		titleFont = new Font("Comic Sans MS",Font.PLAIN,48);
+		titleFont = new Font("Comic Sans MS",Font.PLAIN,35);
+		otherFont = new Font("Comic Sans MS",Font.PLAIN,48);
 		player = new Player(710, 740, 35, 35);
-		finish = new FinishLine(100, 100, 50, 50);
-		object = new ObjectManager(player);
+		finish = new FinishLine(TreasureHunt._width-50, 50, 50,50);
+		object = new ObjectManager(player, finish);        
+		start = System.currentTimeMillis();
 	}
 	
 	void updateMenuState(){
@@ -34,6 +40,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	
 	void updateGameState() {
 		object.update();
+		if(player.hasWon == true) {
+			currentState = END_STATE;
+		}
 	}
 	
 	void updateEndState() {
@@ -60,8 +69,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.fillRect(0,0, TreasureHunt._width, TreasureHunt._height);
 		g.setColor(Color.WHITE);
 		g.setFont(titleFont);
-		g.drawString("GAME OVER", 250, 100);
-		g.drawString("Press ENTER to try again", 100, 600);
+		g.drawString("YOU COMPLETED THE MAZE IN " + finishTime + " SECONDS!", 10, 100);
+		g.setFont(otherFont);
+		g.drawString("Press ENTER to play again", 100, 600);
 	}
 	
 	void startGame() {
@@ -138,13 +148,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 		else {
 			System.out.println("nah");
+			player.isAlive = false;
+			player.x = 710;
+			player.y = 740;
 		}
 		
-		if(new Rectangle(x,y,player.width,player.height).intersects(new Rectangle(x,y,finish.width, finish.height)) == false) {
+		if(player.collisionBox.intersects(finish.collisionBox) == true) {
 			System.out.println("free");
-		}
-		else {
-			System.out.println("harm");
+			end = System.currentTimeMillis();
+			finishTime = (end - start)/1000;
+			player.hasWon = true;
 		}
 		
 	}

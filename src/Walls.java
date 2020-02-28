@@ -32,7 +32,7 @@ public class Walls extends GameObject{
 	}
 	
 	void update() {
-		
+		super.update();
 	}
 	
 	boolean intersects(Rectangle r) {

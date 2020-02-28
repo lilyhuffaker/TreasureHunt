@@ -9,7 +9,7 @@ public class FinishLine extends GameObject{
 	}
 	
 	void update() {
-		
+		super.update();
 	}
 	
 	void draw(Graphics g) {

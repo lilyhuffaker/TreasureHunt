@@ -10,7 +10,7 @@ public class Player extends GameObject{
 	}
 	
 	void update(){
-		
+		super.update();
 	}
 	
 	void draw(Graphics g) {

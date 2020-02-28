@@ -4,11 +4,12 @@ public class ObjectManager {
 	Player player;
 	Walls walls;
 	FinishLine finish;
+
 	
-	ObjectManager(Player player){
+	ObjectManager(Player player, FinishLine finish){
 		this.player = player;
 		this.walls = new Walls(0, 0, TreasureHunt._width, TreasureHunt._height);
-		this.finish = new FinishLine(TreasureHunt._width-50, 50, 50,50);
+		this.finish = finish;
 	}
 	
 	void update() {
