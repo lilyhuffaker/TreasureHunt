@@ -30,7 +30,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		otherFont = new Font("Comic Sans MS",Font.PLAIN,48);
 		player = new Player(710, 740, 35, 35);
 		finish = new FinishLine(TreasureHunt._width-50, 50, 50,50);
-		object = new ObjectManager(player, finish);        
+		object = new ObjectManager(player, finish);
 		start = System.currentTimeMillis();
 	}
 	
@@ -42,6 +42,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		object.update();
 		if(player.hasWon == true) {
 			currentState = END_STATE;
+			player.hasWon = false;
+			player.x = Player.startX;
+			player.y = Player.startY;
 		}
 	}
 	
@@ -75,7 +78,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 	
 	void startGame() {
+		System.out.println("speak");
+		player.hasWon = false;
+		player.x = Player.startX;
+		player.y = Player.startY;
 		tim.start();
+		start = System.currentTimeMillis();
 	}
 	
 	  @Override
@@ -117,6 +125,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			if(currentState > END_STATE) {
 				currentState = MENU_STATE;
 			}
+			if(currentState == GAME_STATE) {
+				 startGame();
+			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_A) {
 			x -= player.speed;
@@ -149,8 +160,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		else {
 			System.out.println("nah");
 			player.isAlive = false;
-			player.x = 710;
-			player.y = 740;
+			player.x = Player.startX;
+			player.y = Player.startY;
 		}
 		
 		if(player.collisionBox.intersects(finish.collisionBox) == true) {
@@ -158,6 +169,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			end = System.currentTimeMillis();
 			finishTime = (end - start)/1000;
 			player.hasWon = true;
+			player.x = Player.startX;
+			player.y = Player.startY;
 		}
 		
 	}
