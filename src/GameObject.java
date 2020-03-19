@@ -6,6 +6,7 @@ public class GameObject {
       int y;
       int width;
       int height;
+      int lives;
       boolean isAlive = true;
       boolean hasWon = false;
       Rectangle collisionBox;
@@ -15,6 +16,7 @@ public class GameObject {
 		this.height = height;
 		this.y = y;
 		this.width = width;
+		lives = 2;
 		collisionBox = new Rectangle(x, y, width, height);
 
 	}

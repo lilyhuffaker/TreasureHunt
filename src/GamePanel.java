@@ -14,18 +14,22 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Timer tim;
 	Font titleFont;
 	Font otherFont;
+	Font lifeFont;
 	Player player;
 	FinishLine finish;
 	ObjectManager object;
 	final int MENU_STATE = 0;
 	final int GAME_STATE = 1;
 	final int END_STATE = 2;
+	final int FAIL_STATE = 3;
+	final int RULES_STATE = 4;
 	int currentState = MENU_STATE;
 	long start;
 	long end;
 	long finishTime;
 	GamePanel() {
 		tim = new Timer(1000/60, this);
+		lifeFont = new Font ("Comic Sans MS",Font.PLAIN,24);
 		titleFont = new Font("Comic Sans MS",Font.PLAIN,35);
 		otherFont = new Font("Comic Sans MS",Font.PLAIN,48);
 		player = new Player(710, 740, 35, 35);
@@ -41,6 +45,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void updateGameState() {
 		object.update();
 		if(player.hasWon == true) {
+			player.lives = 2;
 			currentState = END_STATE;
 			player.hasWon = false;
 			player.x = Player.startX;
@@ -52,6 +57,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		
 	}
 	
+	void updateFailState() {
+		
+	}
+	
+	void updateRulesState() {
+		
+	}
+	
 	void drawMenuState(Graphics g) {
 		g.setColor(Color.GRAY);
 		g.fillRect(0,0, TreasureHunt._width, TreasureHunt._height);
@@ -59,12 +72,29 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.setColor(Color.BLACK);
 		g.drawString("TREASURE HUNT", 200, 100);
 		g.drawString("Press ENTER to start", 150, 600);
+		g.drawString("Press 'I' for help", 150, 700);
 	}
 	
 	void drawGameState(Graphics g) {
 		g.setColor(Color.WHITE);
 		g.fillRect(0,0, TreasureHunt._width, TreasureHunt._height);
 		object.draw(g);
+		g.setFont(lifeFont);
+		g.setColor(Color.black);
+		g.drawString("Lives:", 10, 40);
+	    g.setColor(Color.red);
+		g.fillRect(90, 12, 30, 30);
+		g.fillRect(130, 12, 30, 30);
+		g.fillRect(170, 12, 30, 30);
+		if(player.lives == 1) {
+			g.setColor(Color.LIGHT_GRAY);
+			g.fillRect(170, 12, 30, 30);
+		}
+		if(player.lives == 0) {
+			g.setColor(Color.LIGHT_GRAY);
+			g.fillRect(170, 12, 30, 30);
+			g.fillRect(130, 12, 30, 30);
+		}
 	}
 	
 	void drawEndState(Graphics g) {
@@ -77,14 +107,35 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.drawString("Press ENTER to play again", 100, 600);
 	}
 	
+	void drawFailState(Graphics g) {
+		g.setColor(Color.DARK_GRAY);
+		g.fillRect(0,0, TreasureHunt._width, TreasureHunt._height);
+		g.setColor(Color.WHITE);
+		g.setFont(titleFont);
+		g.drawString("You failed to complete the maze...", 10, 100);
+		g.setFont(otherFont);
+		g.drawString("Press ENTER to play again", 100, 600);
+	}
+	
+	void drawRulesState(Graphics g) {
+		g.setColor(Color.DARK_GRAY);
+		g.fillRect(0,0, TreasureHunt._width, TreasureHunt._height);
+		g.setColor(Color.WHITE);
+		g.setFont(titleFont);
+		g.drawString("How to Play", 10, 100);
+	}
+	
 	void startGame() {
 		System.out.println("speak");
 		player.hasWon = false;
+		player.isAlive = true;
+		player.lives = 2;
 		player.x = Player.startX;
 		player.y = Player.startY;
 		tim.start();
 		start = System.currentTimeMillis();
 	}
+	
 	
 	  @Override
 
@@ -98,6 +149,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			 else if(currentState == END_STATE){
 	             drawEndState(g);
 	     }
+			 else if(currentState == FAIL_STATE) {
+				 drawFailState(g);
+		 }
+			 else if(currentState == RULES_STATE) {
+				 drawRulesState(g);
+			 }
 	     }
 
 	@Override
@@ -113,6 +170,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		 else if(currentState == END_STATE){
              updateEndState();
      }
+		 else if(currentState == RULES_STATE) {
+			 updateRulesState();
+	 }
+		 else if(currentState == FAIL_STATE) {
+			 updateFailState();
+		 }
 	}
 
 	@Override
@@ -128,6 +191,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			if(currentState == GAME_STATE) {
 				 startGame();
 			}
+		}
+		if (e.getKeyCode() == KeyEvent.VK_I) {
+			currentState = RULES_STATE;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_A) {
 			x -= player.speed;
@@ -159,9 +225,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 		else {
 			System.out.println("nah");
-			player.isAlive = false;
-			player.x = Player.startX;
-			player.y = Player.startY;
+			if (player.lives >= 1) {
+				player.lives--;
+				player.x = Player.startX;
+				player.y = Player.startY;
+			}
+			else {
+				player.isAlive = false;
+				currentState = FAIL_STATE;
+			}
+			
 		}
 		
 		if(player.collisionBox.intersects(finish.collisionBox) == true) {

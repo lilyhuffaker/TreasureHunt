@@ -16,6 +16,7 @@ public class ObjectManager {
 		player.update();
 		walls.update();
 		finish.update();
+		
 	}
 	
 	void draw(Graphics g) {
