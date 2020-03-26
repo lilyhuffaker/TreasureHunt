@@ -6,7 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -27,6 +30,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	long start;
 	long end;
 	long finishTime;
+	public static BufferedImage heartimg;
+	public static BufferedImage failedimg;
+	public static BufferedImage finishedimg;
+	public static BufferedImage titleimg;
+	public static BufferedImage instructionsimg;
+	
 	GamePanel() {
 		tim = new Timer(1000/60, this);
 		lifeFont = new Font ("Comic Sans MS",Font.PLAIN,24);
@@ -36,6 +45,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		finish = new FinishLine(TreasureHunt._width-50, 50, 50,50);
 		object = new ObjectManager(player, finish);
 		start = System.currentTimeMillis();
+		try {
+            heartimg = ImageIO.read(this.getClass().getResourceAsStream("HEART.png"));
+            failedimg = ImageIO.read(this.getClass().getResourceAsStream("ESCAPE_FAILED.png"));
+            finishedimg = ImageIO.read(this.getClass().getResourceAsStream("ESCAPE_FINISHED.png"));
+            titleimg = ImageIO.read(this.getClass().getResourceAsStream("ESCAPE_TITLE.png"));
+            instructionsimg = ImageIO.read(this.getClass().getResourceAsStream("ESCAPE_INSTRUCTIONS.png"));
+    } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+    }
 	}
 	
 	void updateMenuState(){
@@ -66,13 +85,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 	
 	void drawMenuState(Graphics g) {
-		g.setColor(Color.GRAY);
-		g.fillRect(0,0, TreasureHunt._width, TreasureHunt._height);
-		g.setFont(titleFont);
-		g.setColor(Color.BLACK);
-		g.drawString("TREASURE HUNT", 200, 100);
-		g.drawString("Press ENTER to start", 150, 600);
-		g.drawString("Press 'I' for help", 150, 700);
+		g.drawImage(GamePanel.titleimg, 0, 0, TreasureHunt._width, TreasureHunt._height, null);
 	}
 	
 	void drawGameState(Graphics g) {
@@ -82,47 +95,32 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.setFont(lifeFont);
 		g.setColor(Color.black);
 		g.drawString("Lives:", 10, 40);
-	    g.setColor(Color.red);
-		g.fillRect(90, 12, 30, 30);
-		g.fillRect(130, 12, 30, 30);
-		g.fillRect(170, 12, 30, 30);
+		g.drawImage(GamePanel.heartimg, 70, 5, 50, 50, null);
+		g.drawImage(GamePanel.heartimg, 110, 5, 50, 50, null);
+		g.drawImage(GamePanel.heartimg, 150, 5, 50, 50, null);
 		if(player.lives == 1) {
 			g.setColor(Color.LIGHT_GRAY);
-			g.fillRect(170, 12, 30, 30);
+			g.fillRect(150, 0, 50, 50);
 		}
 		if(player.lives == 0) {
 			g.setColor(Color.LIGHT_GRAY);
-			g.fillRect(170, 12, 30, 30);
-			g.fillRect(130, 12, 30, 30);
+			g.fillRect(150, 0, 50, 50);
+			g.fillRect(110, 0, 50, 50);
 		}
 	}
 	
 	void drawEndState(Graphics g) {
-		g.setColor(Color.DARK_GRAY);
-		g.fillRect(0,0, TreasureHunt._width, TreasureHunt._height);
-		g.setColor(Color.WHITE);
+		g.drawImage(GamePanel.finishedimg, 0, 0, TreasureHunt._width, TreasureHunt._height, null);
 		g.setFont(titleFont);
-		g.drawString("YOU COMPLETED THE MAZE IN " + finishTime + " SECONDS!", 10, 100);
-		g.setFont(otherFont);
-		g.drawString("Press ENTER to play again", 100, 600);
+		g.drawString(""+finishTime, 340, 225);
 	}
 	
 	void drawFailState(Graphics g) {
-		g.setColor(Color.DARK_GRAY);
-		g.fillRect(0,0, TreasureHunt._width, TreasureHunt._height);
-		g.setColor(Color.WHITE);
-		g.setFont(titleFont);
-		g.drawString("You failed to complete the maze...", 10, 100);
-		g.setFont(otherFont);
-		g.drawString("Press ENTER to play again", 100, 600);
+		g.drawImage(GamePanel.failedimg, 0, 0, TreasureHunt._width, TreasureHunt._height, null);
 	}
 	
 	void drawRulesState(Graphics g) {
-		g.setColor(Color.DARK_GRAY);
-		g.fillRect(0,0, TreasureHunt._width, TreasureHunt._height);
-		g.setColor(Color.WHITE);
-		g.setFont(titleFont);
-		g.drawString("How to Play", 10, 100);
+		g.drawImage(GamePanel.instructionsimg, 0, 0, TreasureHunt._width, TreasureHunt._height, null);
 	}
 	
 	void startGame() {
