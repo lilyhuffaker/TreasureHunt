@@ -112,7 +112,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void drawEndState(Graphics g) {
 		g.drawImage(GamePanel.finishedimg, 0, 0, TreasureHunt._width, TreasureHunt._height, null);
 		g.setFont(titleFont);
-		g.drawString(""+finishTime, 340, 225);
+		g.drawString(""+finishTime, 320, 225);
 	}
 	
 	void drawFailState(Graphics g) {
